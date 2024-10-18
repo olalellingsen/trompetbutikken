@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
+import Link from "next/link";
+import Navbar from "./Navbar";
 
 export const metadata: Metadata = {
   title: "Trompetbutikken",
@@ -27,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
-        <nav></nav>
+        <Navbar />
         <main className="flex-grow md:py-10 px-2 sm:px-4 md:px-8 xl:w-[1280px] xl:mx-auto">
           {children}
         </main>
