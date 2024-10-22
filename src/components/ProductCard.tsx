@@ -19,7 +19,13 @@ function ProductCard({ product, admin }: ProductCardProps) {
       <div>
         <p className="text-gray-500">{product.brand}</p>
         <p>{product.model}</p>
-        <p>{product.price},-</p>
+        {new Intl.NumberFormat("nb-NO", {
+          style: "currency",
+          currency: "NOK",
+        })
+          .format(product.price)
+          .replace(",00", "")}
+
         {product.stock > 0 ? (
           <div className="flex">
             <p>På lager</p>
