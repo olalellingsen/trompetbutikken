@@ -20,7 +20,7 @@ function Navbar() {
       />
 
       {isOpen && (
-        <div className="md:hidden absolute right-0 top-0 bg-background h-screen w-screen p-2 text-4xl">
+        <div className="md:hidden absolute right-0 top-0 bg-background z-10 h-screen w-screen p-2 text-4xl">
           <X
             size="48"
             strokeWidth={0.5}
