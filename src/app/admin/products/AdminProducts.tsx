@@ -1,8 +1,12 @@
+"use client";
 import { db } from "@/firebase";
 import { collection, getDocs } from "firebase/firestore";
+import Link from "next/link";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import ProductCard from "@/components/ProductCard";
 
-function EditProducts() {
+function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -22,21 +26,15 @@ function EditProducts() {
   return (
     <section>
       <h2>Rediger produkter</h2>
-      <ul className="flex flex-wrap">
+      <ul className="flex flex-wrap gap-4">
         {products.map((product) => (
-          <li key={product.id} className="bg-white p-4 m-2 w-72">
-            {/* <Image src={product.image_url} alt={product.model} fill /> */}
-            <p>ID: {product.id}</p>
-            <p>Merke: {product.brand}</p>
-            <p>Model: {product.model}</p>
-            <p>Pris: {product.price}</p>
-            <button>+</button>
-            <button>-</button>
-          </li>
+          <Link href={`/admin/products/${product.id}`} key={product.id}>
+            <ProductCard product={product} admin />
+          </Link>
         ))}
       </ul>
     </section>
   );
 }
 
-export default EditProducts;
+export default AdminProducts;

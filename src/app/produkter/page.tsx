@@ -1,6 +1,7 @@
 import React from "react";
 import { db } from "@/firebaseAdmin";
-import Image from "next/image";
+import Link from "next/link";
+import ProductCard from "@/components/ProductCard";
 
 async function Products() {
   const productsSnapshot = await db.collection("products").get();
@@ -12,13 +13,11 @@ async function Products() {
   return (
     <section>
       <h1>Produkter</h1>
-      <ul className="flex flex-wrap">
+      <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
         {products.map((product) => (
-          <li key={product.id} className="bg-white p-4 m-2 w-72">
-            {/* <Image src={product.image_url} alt={product.model} fill /> */}
-            <p className="font-bold">{product.brand}</p>
-            <p>{product.model}</p>
-          </li>
+          <Link href={`/produkter/${product.id}`} key={product.id}>
+            <ProductCard product={product} />
+          </Link>
         ))}
       </ul>
     </section>

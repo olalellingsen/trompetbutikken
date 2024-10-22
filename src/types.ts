@@ -3,8 +3,8 @@ interface Product {
   brand: string;
   model: string;
   price: number;
-  image_url: string;
-  in_stock: boolean;
+  stock: number;
+  imageUrl: string;
   type: string;
   description: string;
   artists: string[];

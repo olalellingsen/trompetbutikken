@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import EditProducts from "./EditProducts";
-import { app } from "../../firebase";
+import AdminProducts from "./products/AdminProducts";
+import { app } from "@/firebase";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -49,12 +49,12 @@ function Admin() {
     return (
       <section>
         <div className="flex flex-wrap justify-between gap-2 py-4">
-          <p className="my-2">Logget inn som {user.email}</p>
+          <p className="my-3">Logget inn som {user.email}</p>
           <button onClick={handleLogout}>Logg ut</button>
         </div>
         <br />
 
-        <EditProducts />
+        <AdminProducts />
       </section>
     );
   } else {
