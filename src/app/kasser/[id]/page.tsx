@@ -1,12 +1,11 @@
 import { db } from "@/firebaseAdmin";
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
+import ProductPage from "@/components/ProductPage";
 
-async function ProductDetails({ params }: { params: { id: string } }) {
+async function page({ params }: { params: { id: string } }) {
   const { id: productId } = params;
 
-  // Fetch the product details server-side
   try {
     const productDoc = await db.collection("products").doc(productId).get();
 
@@ -24,16 +23,7 @@ async function ProductDetails({ params }: { params: { id: string } }) {
         >
           Tilbake til kasser
         </Link>
-        <h2>{product.brand}</h2>
-        <h2>{product.model}</h2>
-        <Image
-          src={product.imageUrl}
-          alt={product.model}
-          width={300}
-          height={300}
-        />
-        <p>{product.price.toLocaleString()},-</p>
-        <p>{product.description}</p>
+        <ProductPage product={product} />
       </section>
     );
   } catch (error) {
@@ -42,4 +32,4 @@ async function ProductDetails({ params }: { params: { id: string } }) {
   }
 }
 
-export default ProductDetails;
+export default page;
