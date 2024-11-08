@@ -29,6 +29,7 @@ const DisplayProducts = ({ products, category }: DisplayProductsProps) => {
   const handleToggle = (type: string) => {
     setShowTrumpet(type === "trumpet");
     setShowFlugelhorn(type === "flugelhorn");
+    setSelectedBrands([]); // Reset selected brands when toggling between types
   };
 
   const handleBrandChange = (brand: string) => {
@@ -53,72 +54,74 @@ const DisplayProducts = ({ products, category }: DisplayProductsProps) => {
   return (
     <section>
       {/* Filter by type */}
-      <div className="py-4">
-        {trumpets.length > 0 && (
-          <button
-            className={`${
-              showTrumpet
-                ? "bg-blue-200 hover:bg-blue-200 dark:bg-stone-700 dark:hover:bg-stone-700"
-                : "bg-blue-100 hover:bg-blue-200 dark:bg-stone-600 dark:hover:bg-stone-700"
-            }`}
-            onClick={() => handleToggle("trumpet")}
-          >
-            Trompet
-          </button>
-        )}
-        {flugelhorns.length > 0 && (
-          <button
-            className={`${
-              showFlugelhorn
-                ? "bg-blue-200 hover:bg-blue-200 dark:bg-stone-700 dark:hover:bg-stone-700"
-                : "bg-blue-100 hover:bg-blue-200 dark:bg-stone-600 dark:hover:bg-stone-700"
-            }`}
-            onClick={() => handleToggle("flugelhorn")}
-          >
-            Flygelhorn
-          </button>
-        )}
-      </div>
+      <div className="flex flex-wrap py-4 justify-between">
+        <div>
+          {trumpets.length > 0 && (
+            <button
+              className={`${
+                showTrumpet
+                  ? "bg-blue-200 hover:bg-blue-200 dark:bg-stone-700 dark:hover:bg-stone-700"
+                  : "bg-blue-100 hover:bg-blue-200 dark:bg-stone-600 dark:hover:bg-stone-700"
+              }`}
+              onClick={() => handleToggle("trumpet")}
+            >
+              Trompet
+            </button>
+          )}
+          {flugelhorns.length > 0 && (
+            <button
+              className={`${
+                showFlugelhorn
+                  ? "bg-blue-200 hover:bg-blue-200 dark:bg-stone-700 dark:hover:bg-stone-700"
+                  : "bg-blue-100 hover:bg-blue-200 dark:bg-stone-600 dark:hover:bg-stone-700"
+              }`}
+              onClick={() => handleToggle("flugelhorn")}
+            >
+              Flygelhorn
+            </button>
+          )}
+        </div>
 
-      {/* Filter by brand */}
-      <ul className="px-1 py-4 flex gap-4">
-        {showTrumpet &&
-          trumpet_brands.length > 1 &&
-          trumpet_brands.map((brand) => (
-            <li className="flex" key={brand}>
-              <input
-                type="checkbox"
-                className="w-6 hover:cursor-pointer"
-                id={brand}
-                name={brand}
-                value={brand}
-                onChange={() => handleBrandChange(brand)}
-                checked={selectedBrands.includes(brand)}
-              />
-              <label className="font-thin" htmlFor={brand}>
-                {brand}
-              </label>
-            </li>
-          ))}
-        {showFlugelhorn &&
-          flugelhorn_brands.length > 1 &&
-          flugelhorn_brands.map((brand) => (
-            <li className="flex" key={brand}>
-              <input
-                type="checkbox"
-                className="w-6 hover:cursor-pointer"
-                id={brand}
-                name={brand}
-                value={brand}
-                onChange={() => handleBrandChange(brand)}
-                checked={selectedBrands.includes(brand)}
-              />
-              <label className="font-thin" htmlFor={brand}>
-                {brand}
-              </label>
-            </li>
-          ))}
-      </ul>
+        {/* Filter by brand */}
+        <ul className="flex gap-4 p-3">
+          {showTrumpet &&
+            trumpet_brands.length > 1 &&
+            trumpet_brands.map((brand) => (
+              <li className="flex" key={brand}>
+                <input
+                  type="checkbox"
+                  className="size-5 hover:cursor-pointer"
+                  id={brand}
+                  name={brand}
+                  value={brand}
+                  onChange={() => handleBrandChange(brand)}
+                  checked={selectedBrands.includes(brand)}
+                />
+                <label className="font-thin" htmlFor={brand}>
+                  {brand}
+                </label>
+              </li>
+            ))}
+          {showFlugelhorn &&
+            flugelhorn_brands.length > 1 &&
+            flugelhorn_brands.map((brand) => (
+              <li className="flex" key={brand}>
+                <input
+                  type="checkbox"
+                  className="size-5 hover:cursor-pointer"
+                  id={brand}
+                  name={brand}
+                  value={brand}
+                  onChange={() => handleBrandChange(brand)}
+                  checked={selectedBrands.includes(brand)}
+                />
+                <label className="font-thin" htmlFor={brand}>
+                  {brand}
+                </label>
+              </li>
+            ))}
+        </ul>
+      </div>
 
       {/* Display products */}
       <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

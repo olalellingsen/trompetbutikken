@@ -126,6 +126,7 @@ function AdminProducts() {
                 >
                   <option value="trumpet">Trompet</option>
                   <option value="flugelhorn">Flygelhorn</option>
+
                 </select>
               </div>
               <div>
@@ -168,7 +169,7 @@ function AdminProducts() {
                 required
               />
 
-              <label className="my-2 hover:text-blue-600 hover:cursor-pointer w-max p-2 border border-gray-400 rounded-md border-dotted">
+              <label className="my-4 p-4 hover:text-blue-600 hover:cursor-pointer w-max border border-gray-400 rounded-md border-dotted">
                 Last opp bilde
                 <input
                   type="file"

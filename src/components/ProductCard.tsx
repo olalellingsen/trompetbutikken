@@ -8,13 +8,13 @@ interface ProductCardProps {
 
 function ProductCard({ product, admin }: ProductCardProps) {
   return (
-    <div className="group flex flex-col justify-between aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md h-full hover:-translate-y-0.5 transform transition duration-200">
+    <div className="group bg-stone-100 dark:bg-stone-600 flex flex-col justify-between w-full overflow-hidden rounded-md h-full shadow hover:shadow-md hover:-translate-y-0.5 transform transition duration-200">
       <Image
         src={product.imageUrl || "/placeholder.png"}
         alt={product.model}
         height={100}
         width={200}
-        className="w-full group-hover:opacity-90"
+        className="w-full group-hover:opacity-90 aspect-square object-cover"
       />
       <div className="p-2">
         <p className="text-gray-500 dark:text-gray-400">{product.brand}</p>
