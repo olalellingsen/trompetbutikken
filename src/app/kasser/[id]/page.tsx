@@ -20,9 +20,9 @@ async function ProductDetails({ params }: { params: { id: string } }) {
       <section>
         <Link
           className="underline hover:no-underline text-gray-500"
-          href="/admin"
+          href="/kasser"
         >
-          Tilbake til produkter
+          Tilbake til kasser
         </Link>
         <h2>{product.brand}</h2>
         <h2>{product.model}</h2>

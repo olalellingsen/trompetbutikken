@@ -110,9 +110,9 @@ function AdminProducts() {
                     setNewProduct({ ...newProduct, category: e.target.value })
                   }
                 >
-                  <option value="instrument">Instrument</option>
-                  <option value="munnstykker">Munnstykker</option>
-                  <option value="kasser">Kasser</option>
+                  <option value="instruments">Instrument</option>
+                  <option value="mouthpieces">Munnstykker</option>
+                  <option value="cases">Kasser</option>
                 </select>
               </div>
               <div>

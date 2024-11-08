@@ -34,11 +34,17 @@ function Navbar() {
             <Link onClick={() => setIsOpen(false)} href="/">
               <li>Hjem</li>
             </Link>
-            <Link onClick={() => setIsOpen(false)} href="/produkter">
-              <li>Produkter</li>
-            </Link>
             <Link onClick={() => setIsOpen(false)} href="/hvaskjer">
               <li>Hva skjer</li>
+            </Link>
+            <Link onClick={() => setIsOpen(false)} href="/instrumenter">
+              <li>Instrumenter</li>
+            </Link>
+            <Link onClick={() => setIsOpen(false)} href="/munnstykker">
+              <li>Munnstykker</li>
+            </Link>
+            <Link onClick={() => setIsOpen(false)} href="/kasser">
+              <li>Kasser</li>
             </Link>
             <Link onClick={() => setIsOpen(false)} href="/artister">
               <li>Artister</li>
@@ -48,8 +54,10 @@ function Navbar() {
       )}
       <ul className="hidden md:flex justify-end space-x-10 p-6 text-xl hover:*:text-gray-500 dark:hover:*:text-gray-400">
         <Link href="/">Hjem</Link>
-        <Link href="/produkter">Produkter</Link>
         <Link href="/hvaskjer">Hva skjer</Link>
+        <Link href="/instrumenter">Instrumenter</Link>
+        <Link href="/munnstykker">Munnstykker</Link>
+        <Link href="/kasser">Kasser</Link>
         <Link href="/artister">Artister</Link>
       </ul>
     </nav>
