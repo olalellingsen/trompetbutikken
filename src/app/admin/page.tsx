@@ -59,7 +59,10 @@ function Admin() {
     );
   } else {
     return (
-      <form onSubmit={handleLogin}>
+      <form
+        onSubmit={handleLogin}
+        className="grid max-w-96 mx-auto mt-10 sm:mt-20 border border-gray-400 p-4 rounded-lg"
+      >
         <input
           type="email"
           placeholder="E-post"

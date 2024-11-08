@@ -13,7 +13,7 @@ async function Products() {
   return (
     <section>
       <h1>Produkter</h1>
-      <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
+      <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {products.map((product) => (
           <Link href={`/produkter/${product.id}`} key={product.id}>
             <ProductCard product={product} />

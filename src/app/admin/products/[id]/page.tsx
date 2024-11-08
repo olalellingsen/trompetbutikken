@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { db, storage } from "@/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Link from "next/link";
 
@@ -13,6 +13,8 @@ function EditProduct({ params }: { params: { id: string } }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const { id: productId } = params;
+
+  const [showDialog, setShowDialog] = useState(false);
 
   useEffect(() => {
     if (productId) {
@@ -64,6 +66,14 @@ function EditProduct({ params }: { params: { id: string } }) {
     }
   }
 
+  async function handleDelete() {
+    try {
+      await deleteDoc(doc(db, "products", productId as string));
+    } catch (err) {
+      setError("Failed to delete product: " + (err as Error).message);
+    }
+  }
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
@@ -77,8 +87,8 @@ function EditProduct({ params }: { params: { id: string } }) {
       </Link>
       <h2>Rediger produkt</h2>
       {product && (
-        <form onSubmit={handleSubmit} className="*:w-full *:my-1">
-          <div className="flex flex-wrap gap-2 md:gap-4 w-full">
+        <form onSubmit={handleSubmit}>
+          <div className="grid sm:grid-cols-3 gap-4 *:grid">
             <div>
               <label>Merke</label>
               <input
@@ -100,6 +110,33 @@ function EditProduct({ params }: { params: { id: string } }) {
                 }
                 required
               />
+            </div>
+            <div>
+              <label>Kategori</label>
+              <select
+                name="category"
+                value={product.category}
+                onChange={(e) =>
+                  setProduct({ ...product, category: e.target.value })
+                }
+              >
+                <option value="instrument">Instrument</option>
+                <option value="munnstykker">Munnstykker</option>
+                <option value="kasser">Kasser</option>
+              </select>
+            </div>
+            <div>
+              <label>Type</label>
+              <select
+                name="type"
+                value={product.type}
+                onChange={(e) =>
+                  setProduct({ ...product, type: e.target.value })
+                }
+              >
+                <option value="trumpet">Trompet</option>
+                <option value="flugelhorn">Flygelhorn</option>
+              </select>
             </div>
             <div>
               <label>Pris</label>
@@ -127,27 +164,26 @@ function EditProduct({ params }: { params: { id: string } }) {
           <div className="grid">
             <label>Beskrivelse</label>
             <textarea
-              className="h-36"
               value={product.description}
               onChange={(e) =>
                 setProduct({ ...product, description: e.target.value })
               }
               required
             />
-          </div>
-          <div className="flex flex-wrap">
-            <label>Last opp bilde</label>
-            <input
-              type="file"
-              className="w-48"
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  setNewImage(e.target.files[0]);
-                }
-              }}
-            />
-          </div>
-          <div>
+
+            <label className="my-2 hover:text-blue-600 hover:cursor-pointer w-max p-2 border border-gray-400 rounded-md border-dotted">
+              Last opp bilde
+              <input
+                type="file"
+                className="sr-only"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    setNewImage(e.target.files[0]);
+                  }
+                }}
+              />
+            </label>
+
             {product.imageUrl && (
               <Image
                 src={product.imageUrl}
@@ -156,12 +192,30 @@ function EditProduct({ params }: { params: { id: string } }) {
                 width={200}
               />
             )}
+          </div>
+          <div>
             <br />
             <button type="submit">Oppdater</button>
+            <button
+              type="button"
+              className="bg-red-600 hover:bg-red-700"
+              onClick={() => setShowDialog(true)}
+            >
+              Slett
+            </button>
             <p>{success}</p>
           </div>
         </form>
       )}
+
+      <dialog
+        open={showDialog}
+        className="p-2 rounded-lg bg-background text-foreground border border-foreground "
+      >
+        <p>Er du sikker på at du vil slette dette produktet?</p>
+        <button onClick={handleDelete}>Ja, slett</button>
+        <button onClick={() => setShowDialog(false)}>Nei, avbryt</button>
+      </dialog>
     </section>
   );
 }

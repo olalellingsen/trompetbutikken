@@ -38,19 +38,27 @@ h3 {
   @apply text-xl font-bold my-2;
 }
 
-form {
-  @apply flex flex-col items-center gap-2;
-}
-
 button {
-  @apply bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded m-1;
+  @apply bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded m-1 w-max;
 }
 
 input,
 textarea {
-  @apply border border-gray-300 rounded px-2 py-1 dark:bg-background;
+  @apply border border-gray-300 rounded-lg px-2 py-1 dark:bg-background;
+}
+
+textarea {
+  @apply h-36 max-w-xl;
+}
+
+select {
+  @apply border border-gray-300 rounded-lg p-1 py-1.5 dark:bg-background;
 }
 
 label {
-  @apply m-1;
+  @apply font-semibold text-sm px-1;
+}
+
+form {
+  @apply border border-gray-400 p-4 rounded-lg grid gap-4;
 }

@@ -9,7 +9,10 @@ function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <nav className="min-h-16">
-      <Link href="/" className="absolute top-2 left-2 md:top-4 md:left-4">
+      <Link
+        href="/"
+        className="absolute top-2 left-2 md:top-4 md:left-4 hover:scale-105 transition-all duration-200"
+      >
         <Image src={logo} alt="Trompetbutikken" className="w-12 md:w-16" />
       </Link>
       <Menu
@@ -34,8 +37,8 @@ function Navbar() {
             <Link onClick={() => setIsOpen(false)} href="/produkter">
               <li>Produkter</li>
             </Link>
-            <Link onClick={() => setIsOpen(false)} href="/arrangementer">
-              <li>Arrangementer</li>
+            <Link onClick={() => setIsOpen(false)} href="/hvaskjer">
+              <li>Hva skjer</li>
             </Link>
             <Link onClick={() => setIsOpen(false)} href="/artister">
               <li>Artister</li>
@@ -43,10 +46,10 @@ function Navbar() {
           </ul>
         </div>
       )}
-      <ul className="hidden md:flex justify-end space-x-10 p-6 text-xl hover:*:text-gray-500">
+      <ul className="hidden md:flex justify-end space-x-10 p-6 text-xl hover:*:text-gray-500 dark:hover:*:text-gray-400">
         <Link href="/">Hjem</Link>
         <Link href="/produkter">Produkter</Link>
-        <Link href="/arrangementer">Arrangementer</Link>
+        <Link href="/hvaskjer">Hva skjer</Link>
         <Link href="/artister">Artister</Link>
       </ul>
     </nav>

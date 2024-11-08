@@ -8,9 +8,9 @@ interface ProductCardProps {
 
 function ProductCard({ product, admin }: ProductCardProps) {
   return (
-    <div className="flex flex-col justify-between bg-white dark:bg-stone-800 rounded-lg shadow-md p-4 h-full hover:-translate-y-1 transform transition duration-200 hover:shadow-xl">
+    <div className="flex flex-col justify-between bg-white dark:bg-stone-800 rounded-lg shadow-md p-4 h-full hover:-translate-y-0.5 transform transition duration-200 hover:shadow-xl">
       <Image
-        src={product.imageUrl}
+        src={product.imageUrl || "/placeholder.png"}
         alt={product.model}
         height={100}
         width={200}
