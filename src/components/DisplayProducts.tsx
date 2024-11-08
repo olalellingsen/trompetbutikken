@@ -10,27 +10,54 @@ interface DisplayProductsProps {
 }
 
 const DisplayProducts = ({ products, category }: DisplayProductsProps) => {
-  const [trumpet, setTrumpet] = useState(true);
-  const [flugelhorn, setFlugelhorn] = useState(false);
+  const [showTrumpet, setShowTrumpet] = useState(true);
+  const [showFlugelhorn, setShowFlugelhorn] = useState(false);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
 
   const trumpets = products.filter((product) => product.type === "trumpet");
-
   const flugelhorns = products.filter(
     (product) => product.type === "flugelhorn"
   );
 
+  const trumpet_brands = Array.from(
+    new Set(trumpets.map((product) => product.brand))
+  );
+  const flugelhorn_brands = Array.from(
+    new Set(flugelhorns.map((product) => product.brand))
+  );
+
   const handleToggle = (type: string) => {
-    setTrumpet(type === "trumpet");
-    setFlugelhorn(type === "flugelhorn");
+    setShowTrumpet(type === "trumpet");
+    setShowFlugelhorn(type === "flugelhorn");
   };
+
+  const handleBrandChange = (brand: string) => {
+    setSelectedBrands((prevSelected) =>
+      prevSelected.includes(brand)
+        ? prevSelected.filter((b) => b !== brand)
+        : [...prevSelected, brand]
+    );
+  };
+
+  // Filter products by selected brands if any are selected
+  const filteredTrumpets =
+    selectedBrands.length > 0
+      ? trumpets.filter((product) => selectedBrands.includes(product.brand))
+      : trumpets;
+
+  const filteredFlugelhorns =
+    selectedBrands.length > 0
+      ? flugelhorns.filter((product) => selectedBrands.includes(product.brand))
+      : flugelhorns;
 
   return (
     <section>
+      {/* Filter by type */}
       <div className="py-4">
         {trumpets.length > 0 && (
           <button
             className={`${
-              trumpet
+              showTrumpet
                 ? "bg-blue-200 hover:bg-blue-200 dark:bg-stone-700 dark:hover:bg-stone-700"
                 : "bg-blue-100 hover:bg-blue-200 dark:bg-stone-600 dark:hover:bg-stone-700"
             }`}
@@ -42,7 +69,7 @@ const DisplayProducts = ({ products, category }: DisplayProductsProps) => {
         {flugelhorns.length > 0 && (
           <button
             className={`${
-              flugelhorn
+              showFlugelhorn
                 ? "bg-blue-200 hover:bg-blue-200 dark:bg-stone-700 dark:hover:bg-stone-700"
                 : "bg-blue-100 hover:bg-blue-200 dark:bg-stone-600 dark:hover:bg-stone-700"
             }`}
@@ -52,15 +79,57 @@ const DisplayProducts = ({ products, category }: DisplayProductsProps) => {
           </button>
         )}
       </div>
+
+      {/* Filter by brand */}
+      <ul className="px-1 py-4 flex gap-4">
+        {showTrumpet &&
+          trumpet_brands.length > 1 &&
+          trumpet_brands.map((brand) => (
+            <li className="flex" key={brand}>
+              <input
+                type="checkbox"
+                className="w-6 hover:cursor-pointer"
+                id={brand}
+                name={brand}
+                value={brand}
+                onChange={() => handleBrandChange(brand)}
+                checked={selectedBrands.includes(brand)}
+              />
+              <label className="font-thin" htmlFor={brand}>
+                {brand}
+              </label>
+            </li>
+          ))}
+        {showFlugelhorn &&
+          flugelhorn_brands.length > 1 &&
+          flugelhorn_brands.map((brand) => (
+            <li className="flex" key={brand}>
+              <input
+                type="checkbox"
+                className="w-6 hover:cursor-pointer"
+                id={brand}
+                name={brand}
+                value={brand}
+                onChange={() => handleBrandChange(brand)}
+                checked={selectedBrands.includes(brand)}
+              />
+              <label className="font-thin" htmlFor={brand}>
+                {brand}
+              </label>
+            </li>
+          ))}
+      </ul>
+
+      {/* Display products */}
       <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {trumpet &&
-          trumpets.map((product) => (
+        {showTrumpet &&
+          filteredTrumpets.map((product) => (
             <Link href={`/${category}/${product.id}`} key={product.id}>
               <ProductCard product={product} />
             </Link>
           ))}
-        {flugelhorn &&
-          flugelhorns.map((product) => (
+        {showFlugelhorn &&
+          filteredFlugelhorns.map((product) => (
             <Link href={`/${category}/${product.id}`} key={product.id}>
               <ProductCard product={product} />
             </Link>

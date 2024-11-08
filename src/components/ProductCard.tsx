@@ -8,16 +8,16 @@ interface ProductCardProps {
 
 function ProductCard({ product, admin }: ProductCardProps) {
   return (
-    <div className="flex flex-col justify-between bg-white dark:bg-stone-800 rounded-lg shadow-md p-4 h-full hover:-translate-y-0.5 transform transition duration-200 hover:shadow-xl">
+    <div className="group flex flex-col justify-between aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md h-full hover:-translate-y-0.5 transform transition duration-200">
       <Image
         src={product.imageUrl || "/placeholder.png"}
         alt={product.model}
         height={100}
         width={200}
-        className="w-full"
+        className="w-full group-hover:opacity-90"
       />
-      <div>
-        <p className="text-gray-500">{product.brand}</p>
+      <div className="p-2">
+        <p className="text-gray-500 dark:text-gray-400">{product.brand}</p>
         <p>{product.model}</p>
         {new Intl.NumberFormat("nb-NO", {
           style: "currency",
