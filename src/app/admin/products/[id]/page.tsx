@@ -8,7 +8,7 @@ import Link from "next/link";
 
 function EditProduct({ params }: { params: { id: string } }) {
   const [product, setProduct] = useState<Product | null>(null);
-  const [newImage, setNewImage] = useState<File | null>(null);
+  const [newImages, setNewImages] = useState<File[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -37,30 +37,36 @@ function EditProduct({ params }: { params: { id: string } }) {
     }
   }
 
-  async function handleImageUpload(file: File) {
-    if (!file) return "";
-    const storageRef = ref(storage, `products/${file.name}`);
-    const snapshot = await uploadBytes(storageRef, file);
-    return getDownloadURL(snapshot.ref);
+  async function handleImageUpload(files: File[]) {
+    const imageUrl = [];
+    for (const file of files) {
+      const storageRef = ref(storage, `products/${file.name}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(snapshot.ref);
+      imageUrl.push(url);
+    }
+    return imageUrl;
   }
 
   async function handleSubmit(e: { preventDefault: () => void }) {
     e.preventDefault();
-    setError(""); // Clear previous error
+    setError("");
     try {
-      // If there's a new image, upload it
-      let imageUrl = product?.imageUrl || ""; // Keep existing image URL by default
-      if (newImage) {
-        imageUrl = await handleImageUpload(newImage);
+      // Keep existing image URLs by default, add new ones if they exist
+      let updatedImageUrls = product?.imageUrl || [];
+      if (newImages.length > 0) {
+        const newImageUrls = await handleImageUpload(newImages);
+        updatedImageUrls = [...updatedImageUrls, ...newImageUrls];
       }
 
       // Update product data in Firestore
-      await updateDoc(doc(db, "products", productId as string), {
-        ...product, // Keep existing data
-        imageUrl, // Update image URL
+      await updateDoc(doc(db, "products", productId), {
+        ...product,
+        imageUrl: updatedImageUrls, // Update image URLs array
       });
 
       setSuccess("Product updated successfully");
+      goBackToProducts();
     } catch (err) {
       setError("Failed to update product: " + (err as Error).message);
     }
@@ -69,9 +75,16 @@ function EditProduct({ params }: { params: { id: string } }) {
   async function handleDelete() {
     try {
       await deleteDoc(doc(db, "products", productId as string));
+      goBackToProducts();
     } catch (err) {
       setError("Failed to delete product: " + (err as Error).message);
     }
+  }
+
+  function goBackToProducts() {
+    setTimeout(() => {
+      window.location.href = "/admin";
+    }, 1000);
   }
 
   if (loading) return <p>Loading...</p>;
@@ -89,6 +102,17 @@ function EditProduct({ params }: { params: { id: string } }) {
       {product && (
         <form onSubmit={handleSubmit}>
           <div className="grid sm:grid-cols-3 gap-4 *:grid">
+            <div>
+              <label>Prod ID</label>
+              <input
+                type="text"
+                value={product.prod_id}
+                onChange={(e) =>
+                  setProduct({ ...product, prod_id: e.target.value })
+                }
+                required
+              />
+            </div>
             <div>
               <label>Merke</label>
               <input
@@ -168,29 +192,48 @@ function EditProduct({ params }: { params: { id: string } }) {
               onChange={(e) =>
                 setProduct({ ...product, description: e.target.value })
               }
-              required
             />
 
             <label className="my-4 p-4 hover:text-blue-600 hover:cursor-pointer w-max border border-gray-400 rounded-md border-dotted">
-              Last opp bilde
+              Last opp bilder
               <input
                 type="file"
                 className="sr-only"
+                multiple
                 onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    setNewImage(e.target.files[0]);
+                  if (e.target.files) {
+                    setNewImages(Array.from(e.target.files));
                   }
                 }}
               />
             </label>
+            {newImages.length > 0 && (
+              <div className="flex gap-4 flex-wrap">
+                {newImages.map((image, idx) => (
+                  <Image
+                    key={idx}
+                    src={URL.createObjectURL(image)}
+                    alt={`New Image ${idx + 1}`}
+                    width={100}
+                    height={100}
+                  />
+                ))}
+              </div>
+            )}
 
+            {/* Display existing images */}
             {product.imageUrl && (
-              <Image
-                src={product.imageUrl}
-                alt={product.model}
-                height={100}
-                width={200}
-              />
+              <div className="flex gap-4 flex-wrap">
+                {product.imageUrl.map((url, idx) => (
+                  <Image
+                    key={idx}
+                    src={url}
+                    alt={`Existing Image ${idx + 1}`}
+                    width={100}
+                    height={100}
+                  />
+                ))}
+              </div>
             )}
           </div>
           <div>
@@ -208,14 +251,23 @@ function EditProduct({ params }: { params: { id: string } }) {
         </form>
       )}
 
-      <dialog
-        open={showDialog}
-        className="p-2 rounded-lg bg-background text-foreground border border-foreground "
-      >
-        <p>Er du sikker på at du vil slette dette produktet?</p>
-        <button onClick={handleDelete}>Ja, slett</button>
-        <button onClick={() => setShowDialog(false)}>Nei, avbryt</button>
-      </dialog>
+      {showDialog && (
+        <dialog className="fixed top-0 right-0 w-screen h-screen flex justify-center items-center bg-black bg-opacity-50">
+          <div className="max-w-sm mx-auto p-3 rounded-lg bg-background text-foreground border border-foreground ">
+            <p>Er du sikker på at du vil slette dette produktet?</p>
+            <button
+              className="bg-red-500 hover:bg-red-600"
+              onClick={() => {
+                handleDelete();
+                setShowDialog(false);
+              }}
+            >
+              Ja, slett
+            </button>
+            <button onClick={() => setShowDialog(false)}>Nei, avbryt</button>
+          </div>
+        </dialog>
+      )}
     </section>
   );
 }

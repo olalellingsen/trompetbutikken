@@ -27,44 +27,61 @@ function AdminProducts() {
   }
 
   const [newProduct, setNewProduct] = useState({
+    prod_id: "",
     model: "",
     brand: "",
-    category: "",
-    type: "",
+    category: "instruments",
+    type: "trumpet",
     price: 0,
     stock: 0,
     description: "",
-    imageUrl: "",
+    imageUrl: [] as string[],
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [newImage, setNewImage] = useState<File | null>(null);
+  const [newImages, setNewImages] = useState<File[]>([]); // Handle multiple images
 
   async function handleSubmit(e: { preventDefault: () => void }) {
     e.preventDefault();
     setError(""); // Clear previous error
     try {
-      let imageUrl = "/placeholder.png"; // Default image URL
-      if (newImage) {
-        imageUrl = await handleImageUpload(newImage);
+      let imageUrls: string[] = []; // Array to store uploaded image URLs
+      if (newImages.length > 0) {
+        imageUrls = await handleMultipleImageUpload(newImages);
       }
 
       await addDoc(collection(db, "products"), {
         ...newProduct, // Add product data
-        imageUrl, // Update image URL
+        imageUrls, // Set the array of image URLs
       });
 
       setSuccess("Product added successfully");
+      setNewProduct({
+        prod_id: "",
+        model: "",
+        brand: "",
+        category: "instruments",
+        type: "trumpet",
+        price: 0,
+        stock: 0,
+        description: "",
+        imageUrl: [],
+      });
+      setNewImages([]);
     } catch (err) {
       setError("Failed to add product: " + (err as Error).message);
     }
   }
 
-  async function handleImageUpload(file: File) {
-    if (!file) return "";
-    const storageRef = ref(storage, `products/${file.name}`);
-    const snapshot = await uploadBytes(storageRef, file);
-    return getDownloadURL(snapshot.ref);
+  async function handleMultipleImageUpload(files: File[]) {
+    const uploadPromises = files.map(async (file) => {
+      const storageRef = ref(storage, `products/${file.name}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      return getDownloadURL(snapshot.ref);
+    });
+
+    // Wait for all images to upload and return URLs
+    return Promise.all(uploadPromises);
   }
 
   return (
@@ -79,6 +96,17 @@ function AdminProducts() {
         <section>
           <form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-3 gap-4 *:grid">
+              <div>
+                <label>Prod ID</label>
+                <input
+                  type="text"
+                  value={newProduct.prod_id}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, prod_id: e.target.value })
+                  }
+                  required
+                />
+              </div>
               <div>
                 <label>Merke</label>
                 <input
@@ -126,7 +154,6 @@ function AdminProducts() {
                 >
                   <option value="trumpet">Trompet</option>
                   <option value="flugelhorn">Flygelhorn</option>
-
                 </select>
               </div>
               <div>
@@ -166,29 +193,21 @@ function AdminProducts() {
                 onChange={(e) =>
                   setNewProduct({ ...newProduct, description: e.target.value })
                 }
-                required
               />
 
               <label className="my-4 p-4 hover:text-blue-600 hover:cursor-pointer w-max border border-gray-400 rounded-md border-dotted">
-                Last opp bilde
+                Last opp bilder
                 <input
                   type="file"
                   className="sr-only"
+                  multiple
                   onChange={(e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      setNewImage(e.target.files[0]);
+                    if (e.target.files) {
+                      setNewImages(Array.from(e.target.files));
                     }
                   }}
                 />
               </label>
-              {newProduct.imageUrl && (
-                <Image
-                  src={newProduct.imageUrl}
-                  alt={newProduct.model}
-                  height={100}
-                  width={200}
-                />
-              )}
             </div>
 
             <div>

@@ -6,7 +6,7 @@ import ProductCard from "@/components/ProductCard";
 
 interface DisplayProductsProps {
   products: Product[];
-  category: string;
+  category?: string;
 }
 
 const DisplayProducts = ({ products, category }: DisplayProductsProps) => {
@@ -14,10 +14,18 @@ const DisplayProducts = ({ products, category }: DisplayProductsProps) => {
   const [showFlugelhorn, setShowFlugelhorn] = useState(false);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
 
-  const trumpets = products.filter((product) => product.type === "trumpet");
-  const flugelhorns = products.filter(
-    (product) => product.type === "flugelhorn"
-  );
+  // Sorting by brand first, then by model within each brand
+  const trumpets = products
+    .filter((product) => product.type === "trumpet")
+    .sort(
+      (a, b) => a.brand.localeCompare(b.brand) || a.model.localeCompare(b.model)
+    );
+
+  const flugelhorns = products
+    .filter((product) => product.type === "flugelhorn")
+    .sort(
+      (a, b) => a.brand.localeCompare(b.brand) || a.model.localeCompare(b.model)
+    );
 
   const trumpet_brands = Array.from(
     new Set(trumpets.map((product) => product.brand))
@@ -55,8 +63,8 @@ const DisplayProducts = ({ products, category }: DisplayProductsProps) => {
     <section>
       {/* Filter by type */}
       <div className="flex flex-wrap py-4 justify-between">
-        <div>
-          {trumpets.length > 0 && (
+        {trumpets.length > 0 && flugelhorns.length > 0 && (
+          <div>
             <button
               className={`${
                 showTrumpet
@@ -67,8 +75,6 @@ const DisplayProducts = ({ products, category }: DisplayProductsProps) => {
             >
               Trompet
             </button>
-          )}
-          {flugelhorns.length > 0 && (
             <button
               className={`${
                 showFlugelhorn
@@ -79,8 +85,8 @@ const DisplayProducts = ({ products, category }: DisplayProductsProps) => {
             >
               Flygelhorn
             </button>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Filter by brand */}
         <ul className="flex gap-4 p-3">

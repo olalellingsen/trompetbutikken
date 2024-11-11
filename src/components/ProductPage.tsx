@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+import ImageSlider from "./ImageSlider";
 
 function ProductPage({ product }: { product: Product }) {
   return (
@@ -20,24 +20,22 @@ function ProductPage({ product }: { product: Product }) {
               <span className="bg-red-700 rounded-full m-1.5 size-3"></span>
             </div>
           )}
-          <h2 className="py-4 md:py-10">
-            {new Intl.NumberFormat("nb-NO", {
-              style: "currency",
-              currency: "NOK",
-            })
-              .format(product.price)
-              .replace(",00", "")}
-          </h2>
+          <div className="py-4 md:py-10">
+            <h2>
+              {new Intl.NumberFormat("nb-NO", {
+                style: "currency",
+                currency: "NOK",
+              })
+                .format(product.price)
+                .replace(",00", "")}
+            </h2>
+            <p className="text-gray-500 dark:text-gray-400">Inkl. mva</p>
+          </div>
+
           <p className="py-4 hidden md:block">{product.description}</p>
         </div>
 
-        <Image
-          src={product.imageUrl}
-          alt={product.model}
-          width={300}
-          height={300}
-          className="w-full"
-        />
+        <ImageSlider images={product.imageUrl} />
       </div>
       <p className="py-4 md:hidden">{product.description}</p>
     </section>
