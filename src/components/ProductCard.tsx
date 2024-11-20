@@ -10,7 +10,7 @@ interface ProductCardProps {
 
 function ProductCard({ product, admin }: ProductCardProps) {
   return (
-    <div className="group bg-stone-100 dark:bg-stone-600 flex flex-col justify-between w-full overflow-hidden rounded-md h-full shadow hover:shadow-md hover:-translate-y-0.5 transform transition duration-200">
+    <div className="group bg-stone-100 dark:bg-stone-800 flex flex-col justify-between w-full overflow-hidden rounded-md h-full shadow hover:shadow-md hover:-translate-y-0.5 transform transition duration-200">
       <Image
         src={product.imageUrl[0] || placeholder}
         alt={product.model}
