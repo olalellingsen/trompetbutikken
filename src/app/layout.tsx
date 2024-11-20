@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
-import Link from "next/link";
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 export const metadata: Metadata = {
   title: "Trompetbutikken",
@@ -30,10 +30,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         <Navbar />
-        <main className="flex-grow md:py-10 px-2 sm:px-4 md:px-8 xl:w-[1280px] xl:mx-auto">
+        <main className="flex-grow py-4 md:py-10 px-2 sm:px-4 md:px-8 xl:w-[1280px] xl:mx-auto">
           {children}
         </main>
-        <footer></footer>
+        <Footer />
       </body>
     </html>
   );

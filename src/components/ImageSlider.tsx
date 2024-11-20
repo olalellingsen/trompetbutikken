@@ -41,7 +41,7 @@ function ImageSlider({ images }: ImageSliderProps) {
         <div className="flex justify-between p-4">
           <CircleChevronLeft
             strokeWidth={1}
-            onClick={handleNext}
+            onClick={handlePrev}
             className="md:absolute top-1/2 left-2 transform md:-translate-y-1/2 md:dark:text-background hover:scale-105 hover:cursor-pointer"
             size={40}
           />

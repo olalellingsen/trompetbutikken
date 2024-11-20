@@ -19,24 +19,24 @@ function Navbar() {
         size="48"
         strokeWidth={0.5}
         onClick={() => setIsOpen(true)}
-        className="absolute right-2 top-2 md:hidden"
+        className="absolute right-2 top-2 md:m-3 lg:hidden"
       />
 
       {isOpen && (
-        <div className="md:hidden absolute right-0 top-0 bg-background z-10 h-screen w-screen p-2 text-4xl">
+        <div className="lg:hidden absolute right-0 top-0 bg-background z-10 h-screen w-screen p-2 text-4xl">
           <X
             size="48"
             strokeWidth={0.5}
             onClick={() => setIsOpen(false)}
-            className="absolute right-2"
+            className="absolute right-2 md:m-3"
           />
-          <ul className="p-10 grid gap-2">
+          <ul className="p-10 grid gap-y-4">
             <Link onClick={() => setIsOpen(false)} href="/">
               <li>Hjem</li>
             </Link>
-            <Link onClick={() => setIsOpen(false)} href="/hvaskjer">
+            {/* <Link onClick={() => setIsOpen(false)} href="/hvaskjer">
               <li>Hva skjer</li>
-            </Link>
+            </Link> */}
             <Link onClick={() => setIsOpen(false)} href="/instrumenter">
               <li>Instrumenter</li>
             </Link>
@@ -46,19 +46,23 @@ function Navbar() {
             <Link onClick={() => setIsOpen(false)} href="/kasser">
               <li>Kasser</li>
             </Link>
-            <Link onClick={() => setIsOpen(false)} href="/artister">
-              <li>Artister</li>
+            <Link onClick={() => setIsOpen(false)} href="/kontakt">
+              <li>Kontakt oss</li>
             </Link>
+            {/* <Link onClick={() => setIsOpen(false)} href="/artister">
+              <li>Artister</li>
+            </Link> */}
           </ul>
         </div>
       )}
-      <ul className="hidden md:flex justify-end space-x-10 p-6 text-xl hover:*:text-gray-500 dark:hover:*:text-gray-400">
+      <ul className="hidden lg:flex justify-end space-x-10 p-8 text-xl hover:*:text-gray-500 dark:hover:*:text-gray-400">
         <Link href="/">Hjem</Link>
-        <Link href="/hvaskjer">Hva skjer</Link>
+        {/* <Link href="/hvaskjer">Hva skjer</Link> */}
         <Link href="/instrumenter">Instrumenter</Link>
         <Link href="/munnstykker">Munnstykker</Link>
         <Link href="/kasser">Kasser</Link>
-        <Link href="/artister">Artister</Link>
+        <Link href="/kontakt">Kontakt oss</Link>
+        {/* <Link href="/artister">Artister</Link> */}
       </ul>
     </nav>
   );

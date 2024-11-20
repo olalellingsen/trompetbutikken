@@ -34,8 +34,8 @@ function Admin() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-    } catch (error: string | any) {
-      setError("Failed to log in: " + error.message);
+    } catch (error) {
+      setError("Failed to log in: " + (error as Error).message);
     }
   };
 
@@ -59,27 +59,27 @@ function Admin() {
     );
   } else {
     return (
-      <form
-        onSubmit={handleLogin}
-        className="grid max-w-96 mx-auto mt-10 sm:mt-20 border border-gray-400 p-4 rounded-lg"
-      >
-        <input
-          type="email"
-          placeholder="E-post"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Passord"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Logg inn</button>
-        {error && <p className="error">{error}</p>}{" "}
-      </form>
+      <section>
+        <h2 className="text-center">Logg inn</h2>
+        <form onSubmit={handleLogin} className="grid max-w-96 mx-auto">
+          <input
+            type="email"
+            placeholder="E-post"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Passord"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit">Logg inn</button>
+          {error && <p className="error">{error}</p>}{" "}
+        </form>
+      </section>
     );
   }
 }

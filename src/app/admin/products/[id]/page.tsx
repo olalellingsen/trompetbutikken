@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { Product } from "@/types";
 import Image from "next/image";
 import { db, storage } from "@/firebase";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
@@ -7,7 +8,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Link from "next/link";
 
 function EditProduct({ params }: { params: { id: string } }) {
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<Product>();
   const [newImages, setNewImages] = useState<File[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -20,7 +21,7 @@ function EditProduct({ params }: { params: { id: string } }) {
     if (productId) {
       fetchProduct();
     }
-  }, [productId]);
+  });
 
   async function fetchProduct() {
     try {
@@ -32,7 +33,7 @@ function EditProduct({ params }: { params: { id: string } }) {
       }
       setLoading(false);
     } catch (err) {
-      setError("Error fetching product data");
+      setError("Error fetching product data" + (err as Error).message);
       setLoading(false);
     }
   }
@@ -53,7 +54,11 @@ function EditProduct({ params }: { params: { id: string } }) {
     setError("");
     try {
       // Keep existing image URLs by default, add new ones if they exist
-      let updatedImageUrls = product?.imageUrl || [];
+      let updatedImageUrls = [] as string[];
+
+      if (product?.imageUrl[0] !== "") {
+        updatedImageUrls = product?.imageUrl as string[];
+      }
       if (newImages.length > 0) {
         const newImageUrls = await handleImageUpload(newImages);
         updatedImageUrls = [...updatedImageUrls, ...newImageUrls];

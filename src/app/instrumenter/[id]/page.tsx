@@ -2,6 +2,7 @@ import { db } from "@/firebaseAdmin";
 import React from "react";
 import Link from "next/link";
 import ProductPage from "@/components/ProductPage";
+import { Product } from "@/types";
 
 async function page({ params }: { params: { id: string } }) {
   const { id: productId } = params;

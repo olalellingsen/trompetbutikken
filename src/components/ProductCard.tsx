@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import placeholder from "@/public/placeholder.png";
+import { Product } from "@/types";
 
 interface ProductCardProps {
   product: Product;

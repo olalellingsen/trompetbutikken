@@ -1,6 +1,7 @@
 import React from "react";
 import { db } from "@/firebaseAdmin";
 import DisplayProducts from "../../components/DisplayProducts";
+import { Product } from "@/types";
 
 async function Mouthpieces() {
   const productsSnapshot = await db.collection("products").get();

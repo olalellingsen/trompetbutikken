@@ -1,12 +1,12 @@
 "use client";
 
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "@/firebase";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import ProductCard from "@/components/ProductCard";
-import Image from "next/image";
+import { Product } from "@/types";
 
 function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -44,18 +44,32 @@ function AdminProducts() {
   async function handleSubmit(e: { preventDefault: () => void }) {
     e.preventDefault();
     setError(""); // Clear previous error
+    setSuccess(""); // Clear previous success message
     try {
-      let imageUrls: string[] = []; // Array to store uploaded image URLs
+      // Check for duplicate product_id
+      const productRef = collection(db, "products");
+      const querySnapshot = await getDocs(
+        query(productRef, where("prod_id", "==", newProduct.prod_id))
+      );
+
+      if (!querySnapshot.empty) {
+        setError("A product with this ID already exists.");
+        return;
+      }
+
+      // Upload images
+      let imageUrls: string[] = [];
       if (newImages.length > 0) {
         imageUrls = await handleMultipleImageUpload(newImages);
       }
 
-      await addDoc(collection(db, "products"), {
-        ...newProduct, // Add product data
-        imageUrls, // Set the array of image URLs
+      // Add product to Firestore
+      await addDoc(productRef, {
+        ...newProduct,
+        imageUrls,
       });
 
-      setSuccess("Product added successfully");
+      setSuccess("Product added successfully.");
       setNewProduct({
         prod_id: "",
         model: "",
@@ -68,6 +82,7 @@ function AdminProducts() {
         imageUrl: [],
       });
       setNewImages([]);
+      fetchProducts(); // Refresh product list
     } catch (err) {
       setError("Failed to add product: " + (err as Error).message);
     }
@@ -86,14 +101,11 @@ function AdminProducts() {
 
   return (
     <>
-      <h2
-        onClick={() => setShowAddProduct(!showAddProduct)}
-        className="hover:underline hover:cursor-pointer"
-      >
+      <button onClick={() => setShowAddProduct(!showAddProduct)}>
         Legg til produkt {!showAddProduct ? "+" : "-"}
-      </h2>
+      </button>
       {showAddProduct && (
-        <section>
+        <section className="my-2">
           <form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-3 gap-4 *:grid">
               <div>
@@ -225,12 +237,37 @@ function AdminProducts() {
 
       <section>
         <h2>Rediger produkter</h2>
+        <h3>Instrumenter</h3>
         <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {products.map((product) => (
-            <Link href={`/admin/products/${product.id}`} key={product.id}>
-              <ProductCard product={product} admin />
-            </Link>
-          ))}
+          {products
+            .filter((product) => product.category === "instruments")
+            .map((product) => (
+              <Link href={`/admin/products/${product.id}`} key={product.id}>
+                <ProductCard product={product} admin />
+              </Link>
+            ))}
+        </ul>
+        <br />
+        <h3>Munnstykker</h3>
+        <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {products
+            .filter((product) => product.category === "mouthpieces")
+            .map((product) => (
+              <Link href={`/admin/products/${product.id}`} key={product.id}>
+                <ProductCard product={product} admin />
+              </Link>
+            ))}
+        </ul>
+        <br />
+        <h3>Kasser</h3>
+        <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {products
+            .filter((product) => product.category === "cases")
+            .map((product) => (
+              <Link href={`/admin/products/${product.id}`} key={product.id}>
+                <ProductCard product={product} admin />
+              </Link>
+            ))}
         </ul>
       </section>
     </>

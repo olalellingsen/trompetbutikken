@@ -9,7 +9,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #333333;
+    --background: #161311;
     --foreground: #ededed;
   }
 }
@@ -27,7 +27,7 @@ body {
 }
 
 h1 {
-  @apply text-3xl md:text-4xl font-bold text-center my-4 mb-8;
+  @apply text-3xl md:text-4xl font-bold text-center my-4;
 }
 
 h2 {
@@ -44,7 +44,7 @@ button {
 
 input,
 textarea {
-  @apply border border-gray-300 rounded-lg px-2 py-1 dark:bg-background;
+  @apply border border-gray-400 rounded-lg px-2 py-1 dark:bg-background dark:border-gray-600;
 }
 
 textarea {
@@ -60,5 +60,5 @@ label {
 }
 
 form {
-  @apply border border-gray-400 p-4 rounded-lg grid gap-4;
+  @apply border border-gray-400 dark:border-gray-600 p-4 rounded-lg grid gap-4;
 }

@@ -1,11 +1,11 @@
 import React from "react";
 
-function Artists() {
+function Kontakt() {
   return (
     <section>
-      <h1>Artister</h1>
+      <h1>Kontakt oss</h1>
     </section>
   );
 }
 
-export default Artists;
+export default Kontakt;

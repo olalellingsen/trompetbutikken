@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
+import { Product } from "@/types";
 
 interface DisplayProductsProps {
   products: Product[];
@@ -62,7 +63,7 @@ const DisplayProducts = ({ products, category }: DisplayProductsProps) => {
   return (
     <section>
       {/* Filter by type */}
-      <div className="flex flex-wrap py-4 justify-between">
+      <div className="flex flex-wrap py-2 justify-between">
         {trumpets.length > 0 && flugelhorns.length > 0 && (
           <div>
             <button
@@ -89,21 +90,24 @@ const DisplayProducts = ({ products, category }: DisplayProductsProps) => {
         )}
 
         {/* Filter by brand */}
-        <ul className="flex gap-4 p-3">
+        <ul className="flex gap-x-4 p-3">
           {showTrumpet &&
             trumpet_brands.length > 1 &&
             trumpet_brands.map((brand) => (
-              <li className="flex" key={brand}>
-                <input
-                  type="checkbox"
-                  className="size-5 hover:cursor-pointer"
-                  id={brand}
-                  name={brand}
-                  value={brand}
-                  onChange={() => handleBrandChange(brand)}
-                  checked={selectedBrands.includes(brand)}
-                />
-                <label className="font-thin" htmlFor={brand}>
+              <li key={brand}>
+                <label
+                  className="font-thin flex gap-x-1 hover:cursor-pointer"
+                  htmlFor={brand}
+                >
+                  <input
+                    type="checkbox"
+                    className="size-5 hover:cursor-pointer appearance-none checked:bg-blue-600 border-blue-600 checked:border-none"
+                    id={brand}
+                    name={brand}
+                    value={brand}
+                    onChange={() => handleBrandChange(brand)}
+                    checked={selectedBrands.includes(brand)}
+                  />
                   {brand}
                 </label>
               </li>
@@ -111,17 +115,20 @@ const DisplayProducts = ({ products, category }: DisplayProductsProps) => {
           {showFlugelhorn &&
             flugelhorn_brands.length > 1 &&
             flugelhorn_brands.map((brand) => (
-              <li className="flex" key={brand}>
-                <input
-                  type="checkbox"
-                  className="size-5 hover:cursor-pointer"
-                  id={brand}
-                  name={brand}
-                  value={brand}
-                  onChange={() => handleBrandChange(brand)}
-                  checked={selectedBrands.includes(brand)}
-                />
-                <label className="font-thin" htmlFor={brand}>
+              <li key={brand}>
+                <label
+                  className="font-thin flex gap-x-1 hover:cursor-pointer"
+                  htmlFor={brand}
+                >
+                  <input
+                    type="checkbox"
+                    className="size-5 hover:cursor-pointer appearance-none checked:bg-blue-600 border-blue-600 checked:border-none"
+                    id={brand}
+                    name={brand}
+                    value={brand}
+                    onChange={() => handleBrandChange(brand)}
+                    checked={selectedBrands.includes(brand)}
+                  />
                   {brand}
                 </label>
               </li>
@@ -130,7 +137,7 @@ const DisplayProducts = ({ products, category }: DisplayProductsProps) => {
       </div>
 
       {/* Display products */}
-      <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
         {showTrumpet &&
           filteredTrumpets.map((product) => (
             <Link href={`/${category}/${product.id}`} key={product.id}>
