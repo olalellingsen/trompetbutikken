@@ -5,8 +5,8 @@ export interface Product {
   model: string;
   category: string;
   type: string;
-  price: number;
-  stock: number;
+  price: string;
+  stock: string;
   imageUrl: string[];
   description: string;
   artists: string[];

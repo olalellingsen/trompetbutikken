@@ -21,7 +21,7 @@ function EditProduct({ params }: { params: { id: string } }) {
     if (productId) {
       fetchProduct();
     }
-  });
+  }, [productId]);
 
   async function fetchProduct() {
     try {
@@ -53,6 +53,14 @@ function EditProduct({ params }: { params: { id: string } }) {
     e.preventDefault();
     setError("");
     try {
+      // Validate and parse price and stock
+      const price = parseFloat(String(product?.price || "0"));
+      const stock = parseInt(String(product?.stock || "0"));
+
+      if (isNaN(price) || isNaN(stock)) {
+        throw new Error("Price and stock must be valid numbers");
+      }
+
       // Keep existing image URLs by default, add new ones if they exist
       let updatedImageUrls = [] as string[];
 
@@ -170,10 +178,10 @@ function EditProduct({ params }: { params: { id: string } }) {
             <div>
               <label>Pris</label>
               <input
-                type="number"
+                type="text"
                 value={product.price}
                 onChange={(e) =>
-                  setProduct({ ...product, price: Number(e.target.value) })
+                  setProduct({ ...product, price: e.target.value })
                 }
                 required
               />
@@ -181,10 +189,10 @@ function EditProduct({ params }: { params: { id: string } }) {
             <div>
               <label>Antall på lager</label>
               <input
-                type="number"
+                type="text"
                 value={product.stock}
                 onChange={(e) =>
-                  setProduct({ ...product, stock: Number(e.target.value) })
+                  setProduct({ ...product, stock: e.target.value })
                 }
                 required
               />

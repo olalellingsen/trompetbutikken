@@ -26,10 +26,10 @@ function ProductCard({ product, admin }: ProductCardProps) {
           style: "currency",
           currency: "NOK",
         })
-          .format(product.price)
+          .format(Number(product.price))
           .replace(",00", "")}
 
-        {product.stock > 0 ? (
+        {Number(product.stock) > 0 ? (
           <div className="flex">
             <p>På lager</p>
             <span className="bg-green-700 rounded-full m-1.5 size-3"></span>

@@ -32,8 +32,8 @@ function AdminProducts() {
     brand: "",
     category: "instruments",
     type: "trumpet",
-    price: 0,
-    stock: 0,
+    price: "",
+    stock: "",
     description: "",
     imageUrl: [] as string[],
   });
@@ -46,6 +46,14 @@ function AdminProducts() {
     setError(""); // Clear previous error
     setSuccess(""); // Clear previous success message
     try {
+      // Validate and parse price and stock
+      const price = parseFloat(String(newProduct?.price || "0"));
+      const stock = parseInt(String(newProduct?.stock || "0"));
+
+      if (isNaN(price) || isNaN(stock)) {
+        throw new Error("Price and stock must be valid numbers");
+      }
+
       // Check for duplicate product_id
       const productRef = collection(db, "products");
       const querySnapshot = await getDocs(
@@ -76,8 +84,8 @@ function AdminProducts() {
         brand: "",
         category: "instruments",
         type: "trumpet",
-        price: 0,
-        stock: 0,
+        price: "",
+        stock: "",
         description: "",
         imageUrl: [],
       });
@@ -171,12 +179,12 @@ function AdminProducts() {
               <div>
                 <label>Pris</label>
                 <input
-                  type="number"
+                  type="text"
                   value={newProduct.price}
                   onChange={(e) =>
                     setNewProduct({
                       ...newProduct,
-                      price: Number(e.target.value),
+                      price: e.target.value,
                     })
                   }
                   required
@@ -185,12 +193,12 @@ function AdminProducts() {
               <div>
                 <label>Antall på lager</label>
                 <input
-                  type="number"
+                  type="text"
                   value={newProduct.stock}
                   onChange={(e) =>
                     setNewProduct({
                       ...newProduct,
-                      stock: Number(e.target.value),
+                      stock: e.target.value,
                     })
                   }
                   required
