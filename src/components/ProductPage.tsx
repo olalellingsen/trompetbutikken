@@ -10,7 +10,7 @@ function ProductPage({ product }: { product: Product }) {
           <h2>{product.brand}</h2>
           <h2>{product.model}</h2>
 
-          {product.stock > 0 ? (
+          {Number(product.stock) > 0 ? (
             <div className="flex">
               <p>På lager</p>
               <span className="bg-green-700 rounded-full m-1.5 size-3"></span>
@@ -28,7 +28,7 @@ function ProductPage({ product }: { product: Product }) {
                 style: "currency",
                 currency: "NOK",
               })
-                .format(product.price)
+                .format(Number(product.price))
                 .replace(",00", "")}
             </h2>
             <p className="text-gray-500 dark:text-gray-400">Inkl. mva</p>
