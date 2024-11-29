@@ -1,16 +1,9 @@
 import React from "react";
-import { db } from "@/firebaseAdmin";
+import { fetchProductsByCategory } from "@/utils/fetchProducts";
 import DisplayProducts from "../../components/DisplayProducts";
-import { Product } from "@/types";
 
-async function Cases() {
-  const productsSnapshot = await db.collection("products").get();
-  const cases = productsSnapshot.docs
-    .map((doc) => ({
-      id: doc.id,
-      ...(doc.data() as Product),
-    }))
-    .filter((product) => product.category === "cases");
+export default async function Cases() {
+  const cases = await fetchProductsByCategory("cases");
 
   return (
     <section>
@@ -20,4 +13,4 @@ async function Cases() {
   );
 }
 
-export default Cases;
+export const revalidate = 60;

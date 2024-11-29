@@ -6,9 +6,11 @@ import { db, storage } from "@/firebase";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Link from "next/link";
+import { X } from "lucide-react";
 
 function EditProduct({ params }: { params: { id: string } }) {
   const [product, setProduct] = useState<Product>();
+  const [imageUrls, setImageUrls] = useState<string[]>([]); // Track image URLs separately
   const [newImages, setNewImages] = useState<File[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -22,6 +24,12 @@ function EditProduct({ params }: { params: { id: string } }) {
       fetchProduct();
     }
   }, [productId]);
+
+  useEffect(() => {
+    if (product?.imageUrl) {
+      setImageUrls(product.imageUrl); // Initialize state when product is fetched
+    }
+  }, [product]);
 
   async function fetchProduct() {
     try {
@@ -61,12 +69,8 @@ function EditProduct({ params }: { params: { id: string } }) {
         throw new Error("Price and stock must be valid numbers");
       }
 
-      // Keep existing image URLs by default, add new ones if they exist
-      let updatedImageUrls = [] as string[];
-
-      if (product?.imageUrl[0] !== "") {
-        updatedImageUrls = product?.imageUrl as string[];
-      }
+      // Combine existing image URLs and any newly uploaded images
+      let updatedImageUrls = imageUrls; // Always use the latest state
       if (newImages.length > 0) {
         const newImageUrls = await handleImageUpload(newImages);
         updatedImageUrls = [...updatedImageUrls, ...newImageUrls];
@@ -75,13 +79,30 @@ function EditProduct({ params }: { params: { id: string } }) {
       // Update product data in Firestore
       await updateDoc(doc(db, "products", productId), {
         ...product,
-        imageUrl: updatedImageUrls, // Update image URLs array
+        imageUrl: updatedImageUrls,
       });
 
       setSuccess("Product updated successfully");
       goBackToProducts();
     } catch (err) {
       setError("Failed to update product: " + (err as Error).message);
+    }
+  }
+
+  async function handleDeleteImage(url: string) {
+    // Optimistically remove the image from state
+    const updatedImages = imageUrls.filter((img) => img !== url);
+    setImageUrls(updatedImages);
+
+    try {
+      // Update Firestore to reflect the change
+      await updateDoc(doc(db, "products", productId), {
+        imageUrl: updatedImages,
+      });
+    } catch (err) {
+      // If the Firestore update fails, revert the UI change
+      setError("Failed to delete image: " + (err as Error).message);
+      setImageUrls((prev) => [...prev, url]);
     }
   }
 
@@ -235,26 +256,33 @@ function EditProduct({ params }: { params: { id: string } }) {
             )}
 
             {/* Display existing images */}
-            {product.imageUrl && (
-              <div className="flex gap-4 flex-wrap">
-                {product.imageUrl.map((url, idx) => (
+            <div className="flex flex-wrap gap-2">
+              {imageUrls.map((url, idx) => (
+                <div key={idx} className="relative w-max">
                   <Image
-                    key={idx}
                     src={url}
                     alt={`Existing Image ${idx + 1}`}
                     width={100}
                     height={100}
                   />
-                ))}
-              </div>
-            )}
+                  {/* Delete button */}
+                  <button
+                    type="button"
+                    className="absolute top-0 right-0 bg-red-600 hover:bg-red-700 p-1 rounded-full text-white"
+                    onClick={() => handleDeleteImage(url)}
+                  >
+                    <X />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
           <div>
             <br />
             <button type="submit">Oppdater</button>
             <button
               type="button"
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-red-600 hover:bg-red-700 text-white"
               onClick={() => setShowDialog(true)}
             >
               Slett
@@ -269,7 +297,7 @@ function EditProduct({ params }: { params: { id: string } }) {
           <div className="max-w-sm mx-auto p-3 rounded-lg bg-background text-foreground border border-foreground ">
             <p>Er du sikker på at du vil slette dette produktet?</p>
             <button
-              className="bg-red-500 hover:bg-red-600"
+              className="bg-red-500 hover:bg-red-600 text-white"
               onClick={() => {
                 handleDelete();
                 setShowDialog(false);

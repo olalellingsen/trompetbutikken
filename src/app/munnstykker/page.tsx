@@ -1,16 +1,9 @@
 import React from "react";
-import { db } from "@/firebaseAdmin";
 import DisplayProducts from "../../components/DisplayProducts";
-import { Product } from "@/types";
+import { fetchProductsByCategory } from "@/utils/fetchProducts";
 
-async function Mouthpieces() {
-  const productsSnapshot = await db.collection("products").get();
-  const mouthpieces = productsSnapshot.docs
-    .map((doc) => ({
-      id: doc.id,
-      ...(doc.data() as Product),
-    }))
-    .filter((product) => product.category === "mouthpieces");
+export default async function Mouthpieces() {
+  const mouthpieces = await fetchProductsByCategory("mouthpieces");
 
   return (
     <section>
@@ -20,4 +13,5 @@ async function Mouthpieces() {
   );
 }
 
-export default Mouthpieces;
+// Enable ISR by exporting `revalidate`
+export const revalidate = 60; // Revalidate every 60 seconds
