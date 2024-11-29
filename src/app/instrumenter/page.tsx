@@ -3,14 +3,19 @@ import { db } from "@/firebaseAdmin";
 import DisplayProducts from "../../components/DisplayProducts";
 import { Product } from "@/types";
 
-async function Instruments() {
+// Static function to fetch products
+async function fetchInstruments() {
   const productsSnapshot = await db.collection("products").get();
-  const instruments = productsSnapshot.docs
+  return productsSnapshot.docs
     .map((doc) => ({
       id: doc.id,
       ...(doc.data() as Product),
     }))
     .filter((product) => product.category === "instruments");
+}
+
+export default async function Instruments() {
+  const instruments = await fetchInstruments();
 
   return (
     <section>
@@ -20,4 +25,5 @@ async function Instruments() {
   );
 }
 
-export default Instruments;
+// Enable ISR by exporting `revalidate`
+export const revalidate = 60; // Revalidate every 60 seconds
