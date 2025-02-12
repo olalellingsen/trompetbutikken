@@ -1,6 +1,8 @@
 // import Image from "next/image";
 // import img from "@/public/lotus.jpg";
 
+import News from "@/components/News";
+
 export default function Home() {
   return (
     <section>
@@ -12,6 +14,8 @@ export default function Home() {
         width={400}
         className="absolute top-0 left-0 h-screen w-screen object-cover z-[-10]"
       /> */}
+
+      <News />
     </section>
   );
 }

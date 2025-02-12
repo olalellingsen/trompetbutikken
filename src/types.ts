@@ -11,3 +11,11 @@ export interface Product {
   description: string;
   artists: string[];
 }
+
+export interface News {
+  id?: string;
+  number: string;
+  title: string;
+  content: string;
+  imageUrl: string;
+}

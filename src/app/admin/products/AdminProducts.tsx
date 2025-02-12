@@ -108,7 +108,7 @@ function AdminProducts() {
   }
 
   return (
-    <>
+    <section className="p-4">
       <button onClick={() => setShowAddProduct(!showAddProduct)}>
         Legg til produkt {!showAddProduct ? "+" : "-"}
       </button>
@@ -244,7 +244,6 @@ function AdminProducts() {
       <br />
 
       <section>
-        <h2>Rediger produkter</h2>
         <h3>Instrumenter</h3>
         <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {products
@@ -278,7 +277,7 @@ function AdminProducts() {
             ))}
         </ul>
       </section>
-    </>
+    </section>
   );
 }
 
