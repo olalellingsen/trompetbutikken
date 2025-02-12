@@ -8,7 +8,12 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import { db, storage } from "@/firebase";
 import { News } from "@/types";
 
@@ -85,6 +90,51 @@ function AdminNews() {
     return getDownloadURL(snapshot.ref);
   }
 
+  async function handleDeleteImage() {
+    if (!editingNews || !editingNews.imageUrl) return;
+
+    try {
+      setSuccess("");
+      setError("");
+
+      // Extract only the file name from the full URL
+      const decodedUrl = decodeURIComponent(editingNews.imageUrl);
+      const imagePathParts = decodedUrl.split("/o/")[1]?.split("?")[0];
+
+      if (!imagePathParts) {
+        setError("Failed to extract image path.");
+        return;
+      }
+
+      const imageRef = ref(storage, imagePathParts);
+
+      // Wait for Firebase Storage to delete the image
+      await deleteObject(imageRef);
+
+      // Wait for Firestore to update the document (removing imageUrl)
+      if (editingNews?.id) {
+        await updateDoc(doc(db, "news", editingNews.id), {
+          imageUrl: "",
+        });
+      }
+
+      // Ensure state updates AFTER deletion is confirmed
+      setEditingNews((prev) => prev && { ...prev, imageUrl: "" });
+      setNewNews((prev) => ({ ...prev, imageUrl: "" }));
+
+      // Update list of news articles
+      setNews((prevNews) =>
+        prevNews.map((item) =>
+          item.id === editingNews.id ? { ...item, imageUrl: "" } : item
+        )
+      );
+
+      setSuccess("Image deleted successfully.");
+    } catch (err) {
+      setError("Failed to delete image: " + (err as Error).message);
+    }
+  }
+
   function handleEdit(newsItem: News) {
     setEditingNews(newsItem);
     setNewNews(newsItem);
@@ -131,12 +181,27 @@ function AdminNews() {
               />
 
               <div>
-                <label>Bilde</label>
+                <p className="font-bold">Last opp bilde</p>
                 <input
                   type="file"
                   onChange={(e) => setImageFile(e.target.files?.[0] || null)}
                 />
               </div>
+              {newNews.imageUrl && (
+                <div>
+                  <img
+                    src={newNews.imageUrl}
+                    alt={newNews.title}
+                    className="w-60"
+                  />
+                  <button
+                    onClick={handleDeleteImage}
+                    className="bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    Slett bilde
+                  </button>
+                </div>
+              )}
             </div>
 
             <div>
@@ -149,8 +214,6 @@ function AdminNews() {
           </form>
         </section>
       )}
-
-      <br />
 
       <section>
         <ul className="grid gap-4">
