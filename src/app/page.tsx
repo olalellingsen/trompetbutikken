@@ -6,7 +6,15 @@ import News from "@/components/News";
 export default function Home() {
   return (
     <section>
-      <h1>Velkommen til Trompetbutikken</h1>
+      <div className="py-10 text-center">
+        <h1>Velkommen til Trompetbutikken!</h1>
+
+        <p>Vi er en av landets fremste butikker osv osv osv</p>
+        <br />
+
+        <p className="font-bold">Åpningstider:</p>
+        <p>Tirsdager og torsdager 10.00-15.00</p>
+      </div>
       {/* <Image
         src={img}
         alt="Trompetbutkken"

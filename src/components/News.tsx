@@ -16,7 +16,7 @@ async function News() {
       <ul className="grid gap-4">
         {news.map((news) => (
           <Link href={`/news/${news.id}`} key={news.id}>
-            <li className="grid sm:grid-cols-2 group bg-stone-100 dark:bg-stone-800 justify-between w-full overflow-hidden rounded-md shadow hover:shadow-md hover:-translate-y-0.5 transform transition duration-200">
+            <li className="grid sm:grid-cols-2 group bg-stone-100 dark:bg-stone-800 justify-between w-full overflow-hidden rounded-md shadow hover:shadow-md hover:translate-x-1 transform transition duration-200">
               <Image
                 src={news.imageUrl || placeholder}
                 alt={news.title}

@@ -19,7 +19,7 @@ function Navbar() {
         size="48"
         strokeWidth={0.5}
         onClick={() => setIsOpen(true)}
-        className="absolute right-2 top-2 md:m-3 lg:hidden"
+        className="absolute cursor-pointer right-2 top-2 md:m-3 lg:hidden"
       />
 
       {isOpen && (
@@ -28,7 +28,7 @@ function Navbar() {
             size="48"
             strokeWidth={0.5}
             onClick={() => setIsOpen(false)}
-            className="absolute right-2 md:m-3"
+            className="absolute cursor-pointer right-2 md:m-3"
           />
           <ul className="p-10 grid gap-y-4">
             <Link onClick={() => setIsOpen(false)} href="/">

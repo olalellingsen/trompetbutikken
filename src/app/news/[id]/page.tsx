@@ -17,22 +17,24 @@ async function page({ params }: { params: { id: string } }) {
     const news = { id: newsDoc.id, ...(newsDoc.data() as News) };
 
     return (
-      <section className="mx-auto max-w-3xl">
+      <section>
         <Link className="underline hover:no-underline text-gray-500" href="/">
           Tilbake
         </Link>
 
-        <h1>{news.title}</h1>
+        <div className="mx-auto max-w-4xl">
+          <h1>{news.title}</h1>
 
-        <Image
-          className="w-full"
-          src={news.imageUrl}
-          alt={news.title}
-          height={200}
-          width={600}
-        />
+          <Image
+            className="w-full"
+            src={news.imageUrl}
+            alt={news.title}
+            height={200}
+            width={600}
+          />
 
-        <p className="p-2">{news.content}</p>
+          <p className="p-2">{news.content}</p>
+        </div>
       </section>
     );
   } catch (error) {

@@ -6,6 +6,7 @@ import {
   getDocs,
   addDoc,
   updateDoc,
+  deleteDoc,
   doc,
 } from "firebase/firestore";
 import {
@@ -25,7 +26,7 @@ function AdminNews() {
     title: "",
     content: "",
     imageUrl: "",
-    number: "",
+    number: 0,
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [error, setError] = useState("");
@@ -37,10 +38,12 @@ function AdminNews() {
 
   async function fetchNews() {
     const newsSnapshot = await getDocs(collection(db, "news"));
-    const newsData = newsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...(doc.data() as News),
-    }));
+    const newsData = newsSnapshot.docs
+      .map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as News),
+      }))
+      .sort((a, b) => a.number - b.number);
 
     setNews(newsData);
   }
@@ -74,8 +77,7 @@ function AdminNews() {
         setSuccess("News added successfully.");
       }
 
-      setNewNews({ title: "", content: "", imageUrl: "", number: "" });
-      setImageFile(null);
+      clearForm();
       setShowAddNews(false);
       setEditingNews(null);
       fetchNews();
@@ -136,14 +138,61 @@ function AdminNews() {
   }
 
   function handleEdit(newsItem: News) {
+    setSuccess("");
+    setError("");
     setEditingNews(newsItem);
     setNewNews(newsItem);
     setShowAddNews(true);
   }
 
+  async function handleDelete(newsItem: News) {
+    if (!window.confirm("Er du sikker på at du vil slette denne nyheten?"))
+      return;
+
+    try {
+      setError("");
+      setSuccess("");
+
+      // If the news item has an image, delete it from Firebase Storage
+      if (newsItem.imageUrl) {
+        const decodedUrl = decodeURIComponent(newsItem.imageUrl);
+        const imagePathParts = decodedUrl.split("/o/")[1]?.split("?")[0];
+
+        if (imagePathParts) {
+          const imageRef = ref(storage, imagePathParts);
+          await deleteObject(imageRef);
+        }
+      }
+
+      // Delete the news item from Firestore
+      if (newsItem.id) {
+        await deleteDoc(doc(db, "news", newsItem.id));
+      } else {
+        setError("News item ID is undefined.");
+      }
+
+      // Update state to reflect the deletion
+      setNews((prevNews) => prevNews.filter((item) => item.id !== newsItem.id));
+
+      setSuccess("Nyhet slettet.");
+    } catch (err) {
+      setError("Kunne ikke slette nyheten: " + (err as Error).message);
+    }
+  }
+
+  function clearForm() {
+    setNewNews({ title: "", content: "", imageUrl: "", number: 0 });
+    setImageFile(null);
+  }
+
   return (
     <section className="p-4">
-      <button onClick={() => setShowAddNews(!showAddNews)}>
+      <button
+        onClick={() => {
+          setShowAddNews(!showAddNews);
+          clearForm();
+        }}
+      >
         {showAddNews ? "Avbryt" : "Legg til nyhet"}
       </button>
 
@@ -171,11 +220,11 @@ function AdminNews() {
               />
 
               <input
-                type="text"
+                type="number"
                 placeholder="Nummer"
                 value={newNews.number}
                 onChange={(e) =>
-                  setNewNews({ ...newNews, number: e.target.value })
+                  setNewNews({ ...newNews, number: e.target.valueAsNumber })
                 }
                 required
               />
@@ -229,6 +278,12 @@ function AdminNews() {
                 />
               )}
               <button onClick={() => handleEdit(newsItem)}>Rediger</button>
+              <button
+                onClick={() => handleDelete(newsItem)}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                Slett
+              </button>
             </li>
           ))}
         </ul>

@@ -14,7 +14,7 @@ export interface Product {
 
 export interface News {
   id?: string;
-  number: string;
+  number: number;
   title: string;
   content: string;
   imageUrl: string;
