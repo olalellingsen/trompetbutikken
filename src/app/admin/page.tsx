@@ -59,7 +59,9 @@ function Admin() {
         <br />
 
         <button
-          className="bg-transparent text-2xl p-1 py-2 flex justify-between hover:bg-transparent hover:border-black dark:hover:border-gray-500 rounded-none w-full text-left border-b border-gray-300"
+          className={`bg-transparent text-2xl p-1 pt-2 flex justify-between hover:bg-transparent hover:border-black dark:hover:border-gray-500 rounded-none w-full text-left  ${
+            showEditNews ? "border-none" : "border-b"
+          } border-gray-300`}
           onClick={() => {
             setShowEditNews(!showEditNews);
             setShowEditProduct(false);
@@ -70,7 +72,9 @@ function Admin() {
         </button>
         {showEditNews && <AdminNews />}
         <button
-          className="bg-transparent text-2xl p-1 py-2 flex justify-between hover:bg-transparent hover:border-black dark:hover:border-gray-500 rounded-none w-full text-left border-b border-gray-300"
+          className={`bg-transparent text-2xl p-1 pt-2 flex justify-between hover:bg-transparent hover:border-black dark:hover:border-gray-500 rounded-none w-full text-left  ${
+            showEditProduct ? "border-none" : "border-b"
+          } border-gray-300`}
           onClick={() => {
             setShowEditProduct(!showEditProduct);
             setShowEditNews(false);

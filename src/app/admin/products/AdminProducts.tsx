@@ -108,7 +108,7 @@ function AdminProducts() {
   }
 
   return (
-    <section className="p-4">
+    <section className="p-2">
       <button onClick={() => setShowAddProduct(!showAddProduct)}>
         Legg til produkt {!showAddProduct ? "+" : "-"}
       </button>

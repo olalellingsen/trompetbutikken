@@ -186,7 +186,7 @@ function AdminNews() {
   }
 
   return (
-    <section className="p-4">
+    <section className="p-2">
       <button
         onClick={() => {
           setShowAddNews(!showAddNews);
@@ -199,7 +199,7 @@ function AdminNews() {
       {showAddNews && (
         <section className="my-2">
           <form onSubmit={handleSubmit}>
-            <div className="grid gap-4">
+            <div className="grid gap-4 *:w-full *:max-w-md">
               <input
                 type="text"
                 value={newNews.title}
@@ -232,6 +232,7 @@ function AdminNews() {
               <div>
                 <p className="font-bold">Last opp bilde</p>
                 <input
+                  className="w-full"
                   type="file"
                   onChange={(e) => setImageFile(e.target.files?.[0] || null)}
                 />

@@ -26,7 +26,7 @@ async function page({ params }: { params: { id: string } }) {
           <h1>{news.title}</h1>
 
           <Image
-            className="w-full"
+            className="w-full aspect-video object-cover"
             src={news.imageUrl}
             alt={news.title}
             height={200}
